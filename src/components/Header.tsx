@@ -73,7 +73,7 @@ const Header = () => {
           {/* CTA Button */}
           <div className="hidden md:block">
             <Button asChild variant={isScrolled ? "default" : "hero-outline"} size="default">
-              <Link to="/contact">Book Now</Link>
+              <Link to="/book">Book Now</Link>
             </Button>
           </div>
 
@@ -115,7 +115,7 @@ const Header = () => {
             ))}
             <li className="px-4 pt-2">
               <Button asChild className="w-full">
-                <Link to="/contact">Book Now</Link>
+                <Link to="/book">Book Now</Link>
               </Button>
             </li>
           </ul>
