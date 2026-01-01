@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { usePushNotifications } from "@/hooks/usePushNotifications";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -34,6 +35,8 @@ import {
   Eye,
   Clock,
   DollarSign,
+  Bell,
+  BellOff,
 } from "lucide-react";
 
 interface Booking {
@@ -59,6 +62,7 @@ interface Room {
 
 const AdminPage = () => {
   const { toast } = useToast();
+  const { isSupported: pushSupported, token: pushToken } = usePushNotifications();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState("");
   const [bookings, setBookings] = useState<Booking[]>([]);
@@ -204,8 +208,33 @@ const AdminPage = () => {
       {/* Header */}
       <section className="py-8 bg-secondary">
         <div className="container-wide mx-auto px-4">
-          <h1 className="font-serif text-3xl md:text-4xl text-foreground">Booking Dashboard</h1>
-          <p className="text-muted-foreground mt-1">Manage reservations and track bookings</p>
+          <div className="flex items-center justify-between flex-wrap gap-4">
+            <div>
+              <h1 className="font-serif text-3xl md:text-4xl text-foreground">Booking Dashboard</h1>
+              <p className="text-muted-foreground mt-1">Manage reservations and track bookings</p>
+            </div>
+            {/* Push Notification Status */}
+            <div className="flex items-center gap-2">
+              {pushSupported ? (
+                pushToken ? (
+                  <Badge className="bg-accent text-accent-foreground flex items-center gap-1">
+                    <Bell className="w-3 h-3" />
+                    Push Enabled
+                  </Badge>
+                ) : (
+                  <Badge variant="outline" className="flex items-center gap-1">
+                    <BellOff className="w-3 h-3" />
+                    Enabling Push...
+                  </Badge>
+                )
+              ) : (
+                <Badge variant="secondary" className="flex items-center gap-1 text-xs">
+                  <BellOff className="w-3 h-3" />
+                  Push: Use Mobile App
+                </Badge>
+              )}
+            </div>
+          </div>
         </div>
       </section>
 
