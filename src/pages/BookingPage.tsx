@@ -163,22 +163,24 @@ const BookingPage = () => {
       return;
     }
 
-    // Trigger WhatsApp notification
-    try {
-      await supabase.functions.invoke("notify-booking", {
-        body: {
-          booking_id: data.id,
-          guest_name: formData.guest_name,
-          guest_phone: formData.guest_phone,
-          room_name: selectedRoom.name,
-          check_in: format(checkIn, "PPP"),
-          check_out: format(checkOut, "PPP"),
-          total_price: totalPrice,
-        },
-      });
-    } catch (notifyError) {
-      console.log("Notification sent or pending");
-    }
+    // Trigger notifications (WhatsApp + Push)
+    const notificationPayload = {
+      booking_id: data.id,
+      guest_name: formData.guest_name,
+      guest_phone: formData.guest_phone,
+      room_name: selectedRoom.name,
+      check_in: format(checkIn, "PPP"),
+      check_out: format(checkOut, "PPP"),
+      total_price: totalPrice,
+    };
+
+    // Send both notifications in parallel
+    Promise.all([
+      supabase.functions.invoke("notify-booking", { body: notificationPayload }),
+      supabase.functions.invoke("send-push-notification", { body: notificationPayload }),
+    ]).catch((err) => {
+      console.log("Notifications sent or pending", err);
+    });
 
     setBookingRef(data.id.slice(0, 8).toUpperCase());
     setBookingComplete(true);

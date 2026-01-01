@@ -70,6 +70,30 @@ export type Database = {
           },
         ]
       }
+      device_tokens: {
+        Row: {
+          created_at: string
+          device_type: string
+          id: string
+          token: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          device_type: string
+          id?: string
+          token: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          device_type?: string
+          id?: string
+          token?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       rooms: {
         Row: {
           capacity: number
